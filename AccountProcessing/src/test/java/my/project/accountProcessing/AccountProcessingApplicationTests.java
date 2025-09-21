@@ -1,0 +1,14 @@
+package my.project.accountProcessing;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class AccountProcessingApplicationTests {
+
+    @Test
+    void contextLoads() {
+
+    }
+
+}
