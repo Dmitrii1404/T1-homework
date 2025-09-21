@@ -25,33 +25,33 @@ public class Client {
     @Column(name = "client_id", nullable = false, unique = true)
     private String clientId;  // (формат clientId: XXFFNNNNNNNN, где XX - номер региона, FF - номер подразделения банка, N - порядковый. Например, 770100000001, 770200000023)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @Column(name = "middle_name", nullable = false)
+    @Column(name = "middle_name")
     private String middleName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "date_of_birth", nullable = false)
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type", nullable = false)
+    @Column(name = "document_type")
     private DocumentType documentType;
 
-    @Column(name = "document_id", nullable = false, unique = true)
+    @Column(name = "document_id", unique = true)
     private String documentId;
 
-    @Column(name = "document_prefix", nullable = false)
+    @Column(name = "document_prefix")
     private String documentPrefix;
 
-    @Column(name = "document_suffix", nullable = false)
+    @Column(name = "document_suffix")
     private String documentSuffix;
 
 }

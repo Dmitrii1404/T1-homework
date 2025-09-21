@@ -33,7 +33,7 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionType type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)

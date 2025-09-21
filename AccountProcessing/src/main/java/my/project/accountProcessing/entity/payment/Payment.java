@@ -27,11 +27,11 @@ public class Payment {
     @Column(name = "payment_date", nullable = false)
     private LocalDate paymentDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
 
     @Column(name = "is_credit", nullable = false)
-    private Boolean isCredit = Boolean.FALSE;
+    private Boolean isCredit;
 
     @Column(name = "payed_at", nullable = false)
     private LocalDate payedAt;

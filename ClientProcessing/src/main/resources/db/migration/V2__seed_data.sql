@@ -3,17 +3,10 @@ INSERT INTO users (login, password, email) VALUES
     ('Andrey', 'myHashPassword', 'Andrey@yandex.ru');
 
 
-WITH p AS (SELECT nextval('products_seq') AS id)
-INSERT INTO products (id, name, key, create_date, product_id)
-SELECT p.id, 'Debit Card', 'DC', CURRENT_DATE, 'DC' || p.id FROM p;
-
-WITH p AS (SELECT nextval('products_seq') AS id)
-INSERT INTO products (id, name, key, create_date, product_id)
-SELECT p.id, 'Credit Card', 'CC', CURRENT_DATE, 'CC' || p.id FROM p;
-
-WITH p AS (SELECT nextval('products_seq') AS id)
-INSERT INTO products (id, name, key, create_date, product_id)
-SELECT p.id, 'Ipoteka', 'IPO', CURRENT_DATE, 'IPO' || p.id FROM p;
+INSERT INTO products (name, key, create_date) VALUES
+    ('Debit Card', 'DC', CURRENT_DATE),
+    ('Credit Card', 'CC', CURRENT_DATE),
+    ('Ipoteka', 'IPO', CURRENT_DATE);
 
 INSERT INTO clients (client_id, user_id, first_name, middle_name, last_name, date_of_birth, document_type, document_id, document_prefix, document_suffix) VALUES
     ('770100000001', 1, 'Dima', 'Dmitrievich', 'Dmitrii', '2005-04-14', 'PASSPORT', '1234567890', 'somePrefix', 'someSuffix'),

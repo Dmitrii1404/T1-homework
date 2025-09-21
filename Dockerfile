@@ -13,10 +13,12 @@ ENTRYPOINT ["sh", "-c", "java -jar /app/app-client.jar"]
 
 FROM eclipse-temurin:23-jre AS account-runtime
 WORKDIR /app
+
 COPY --from=builder /workspace/AccountProcessing/target/*.jar /app/app-account.jar
 ENTRYPOINT ["sh", "-c", "java -jar /app/app-account.jar"]
 
 FROM eclipse-temurin:23-jre AS credit-runtime
 WORKDIR /app
+
 COPY --from=builder /workspace/CreditProcessing/target/*.jar /app/app-credit.jar
 ENTRYPOINT ["sh", "-c", "java -jar /app/app-credit.jar"]

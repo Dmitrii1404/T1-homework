@@ -27,13 +27,13 @@ public class PaymentRegistry {
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
 
-    @Column(name = "interest_rate_amount", nullable = false)
+    @Column(name = "interest_rate_amount", nullable = false, precision = 5, scale = 4)
     private BigDecimal interestRateAmount;
 
-    @Column(name = "debt_amount", nullable = false)
+    @Column(name = "debt_amount", nullable = false, precision = 18, scale = 2)
     private BigDecimal debtAmount;
 
     @Column(nullable = false)
@@ -41,6 +41,5 @@ public class PaymentRegistry {
 
     @Column(name = "payment_expiration_date", nullable = false)
     private LocalDate paymentExpirationDate;
-
 
 }

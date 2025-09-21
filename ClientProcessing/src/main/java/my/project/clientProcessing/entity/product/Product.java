@@ -18,8 +18,7 @@ import java.time.LocalDate;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
-    @SequenceGenerator(name = "products_seq", sequenceName = "products_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -32,16 +31,8 @@ public class Product {
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
 
-    @Column(name = "product_id", nullable = false, unique = true)
-    private String productId;
-
-    @PrePersist
-    public void prePersist() {
-        if (this.createDate == null) {
-            this.createDate = LocalDate.now();
-        }
-        if (this.id != null && (this.productId == null || this.productId.isBlank())) {
-            this.productId = this.key.name() + this.id;
-        }
+    @Transient
+    public String getProductId() {
+        return key.name() + this.getId();
     }
 }

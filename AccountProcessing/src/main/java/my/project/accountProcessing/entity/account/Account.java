@@ -28,17 +28,17 @@ public class Account {
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
-    @Column(nullable = false)
-    private BigDecimal balance = BigDecimal.ZERO;
+    @Column(nullable = false, precision = 18, scale = 2)
+    private BigDecimal balance;
 
-    @Column(name = "interest_rate", nullable = false)
-    private BigDecimal interestRate = BigDecimal.ZERO;
+    @Column(name = "interest_rate", nullable = false, precision = 5, scale = 4)
+    private BigDecimal interestRate;
 
     @Column(name = "is_recalc", nullable = false)
-    private Boolean isRecalc = false;
+    private Boolean isRecalc;
 
     @Column(name = "card_exist", nullable = false)
-    private Boolean cardExist = false;
+    private Boolean cardExist;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -1,6 +1,3 @@
-CREATE SEQUENCE IF NOT EXISTS products_seq START 1;
-
-
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
     login VARCHAR(100) NOT NULL,
@@ -12,14 +9,13 @@ CREATE INDEX IF NOT EXISTS uk_user_email ON users(email);
 
 
 CREATE TABLE IF NOT EXISTS products (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     key VARCHAR(10) NOT NULL,
-    create_date DATE NOT NULL,
-    product_id VARCHAR(100) NOT NULL UNIQUE
+    create_date DATE NOT NULL
     );
 
-CREATE INDEX IF NOT EXISTS uk_product_productid ON products(product_id);
+CREATE INDEX IF NOT EXISTS uk_product_productid ON products(id);
 
 
 CREATE TABLE IF NOT EXISTS clients (
@@ -27,13 +23,13 @@ CREATE TABLE IF NOT EXISTS clients (
     client_id VARCHAR(12) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,
     first_name VARCHAR(100) NOT NULL,
-    middle_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    date_of_birth DATE NOT NULL,
-    document_type VARCHAR(20) NOT NULL,
-    document_id VARCHAR(100) NOT NULL UNIQUE,
-    document_prefix VARCHAR(100) NOT NULL,
-    document_suffix VARCHAR(100) NOT NULL,
+    middle_name VARCHAR(100),
+    last_name VARCHAR(100),
+    date_of_birth DATE,
+    document_type VARCHAR(20),
+    document_id VARCHAR(100) UNIQUE,
+    document_prefix VARCHAR(100),
+    document_suffix VARCHAR(100),
     CONSTRAINT fk_client_user FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
