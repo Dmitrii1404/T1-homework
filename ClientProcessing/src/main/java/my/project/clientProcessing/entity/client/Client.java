@@ -42,10 +42,10 @@ public class Client {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type")
+    @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @Column(name = "document_id", unique = true)
+    @Column(name = "document_id", nullable = false, unique = true)
     private String documentId;
 
     @Column(name = "document_prefix")
