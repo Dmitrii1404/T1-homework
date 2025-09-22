@@ -16,3 +16,7 @@ INSERT INTO clients (client_id, user_id, first_name, middle_name, last_name, dat
 INSERT INTO client_products (client_id, product_id, open_date, close_date, status) VALUES
     (1, (SELECT id FROM products WHERE key = 'DC' LIMIT 1), CURRENT_DATE, (CURRENT_DATE + INTERVAL '1 month')::date, 'ACTIVE'),
     (2, (SELECT id FROM products WHERE key = 'IPO' LIMIT 1), CURRENT_DATE, (CURRENT_DATE + INTERVAL '12 month')::date, 'ACTIVE');
+
+INSERT INTO blacklist_registries (document_type, document_id, black_listed_at, reason, blacklist_expiration_date) VALUES
+    ('PASSPORT', '3454628225', CURRENT_DATE, 'Banned', (CURRENT_DATE + INTERVAL '3 month')::date),
+    ('PASSPORT', '4940400404', CURRENT_DATE, 'Have ban', (CURRENT_DATE + INTERVAL '2 month')::date);
