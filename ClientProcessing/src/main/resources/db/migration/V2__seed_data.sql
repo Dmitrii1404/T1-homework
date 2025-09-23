@@ -3,10 +3,10 @@ INSERT INTO users (login, password, email) VALUES
     ('Andrey', 'myHashPassword', 'Andrey@yandex.ru');
 
 
-INSERT INTO products (name, key, create_date) VALUES
-    ('Debit Card', 'DC', CURRENT_DATE),
-    ('Credit Card', 'CC', CURRENT_DATE),
-    ('Ipoteka', 'IPO', CURRENT_DATE);
+INSERT INTO products (name, key) VALUES
+    ('Debit Card', 'DC'),
+    ('Credit Card', 'CC'),
+    ('Ipoteka', 'IPO');
 
 INSERT INTO clients (client_id, user_id, first_name, middle_name, last_name, date_of_birth, document_type, document_id, document_prefix, document_suffix) VALUES
     ('770100000001', 1, 'Dima', 'Dmitrievich', 'Dmitrii', '2005-04-14', 'PASSPORT', '1234567890', 'somePrefix', 'someSuffix'),

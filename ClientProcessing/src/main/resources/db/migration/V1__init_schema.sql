@@ -12,10 +12,8 @@ CREATE TABLE IF NOT EXISTS products (
     id BIGSERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     key VARCHAR(10) NOT NULL,
-    create_date DATE NOT NULL
+    create_date DATE NOT NULL DEFAULT now()
     );
-
-CREATE INDEX IF NOT EXISTS uk_product_productid ON products(id);
 
 
 CREATE TABLE IF NOT EXISTS clients (
@@ -34,6 +32,7 @@ CREATE TABLE IF NOT EXISTS clients (
     );
 
 CREATE INDEX IF NOT EXISTS uk_client_clientid ON clients(client_id);
+CREATE INDEX IF NOT EXISTS uk_client_documentid ON clients(document_id);
 
 
 CREATE TABLE IF NOT EXISTS client_products (

@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "clients",
     indexes = {
-            @Index(name = "uk_client_clientid", columnList = "client_id")
+            @Index(name = "uk_client_clientid", columnList = "client_id"),
+            @Index(name = "uk_client_documentid", columnList = "document_id")
     })
 public class Client {
 

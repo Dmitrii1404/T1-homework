@@ -1,5 +1,6 @@
 package my.project.clientProcessing.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import my.project.clientProcessing.dto.ClientCreateDto;
 import my.project.clientProcessing.dto.UserResponseDto;
@@ -18,8 +19,8 @@ public class ClientController {
     private final ClientService clientService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDto> register(@RequestBody ClientCreateDto clientCreateDto) {
+    public ResponseEntity<UserResponseDto> register(@Valid @RequestBody ClientCreateDto clientCreateDto) {
 
-        return ResponseEntity.ok(clientService.userRegistry(clientCreateDto));
+        return ResponseEntity.ok(clientService.clientRegistry(clientCreateDto));
     }
 }
