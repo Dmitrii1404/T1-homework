@@ -20,3 +20,24 @@ spring:
     show-sql: true
     properties:
       format_sql: true
+
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+        delivery:
+          timeout:
+            ms: 20000
+        linger:
+          ms: 0
+        request:
+          timeout:
+            ms: 10000
+    topics:
+      client-products: client_products
+      client-credit-products: client_credit_products
+      client-cards: client_cards
+      client-transactions: client_transactions

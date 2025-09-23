@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -20,3 +20,13 @@ spring:
     show-sql: true
     properties:
       format_sql: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: client-products-event
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "my.lib.core"
