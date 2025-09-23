@@ -1,6 +1,7 @@
 package my.project.clientProcessing.service;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import my.lib.core.DtoTestEvent;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -9,10 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TestService {
 
     private KafkaTemplate<String, DtoTestEvent> kafkaTemplate;
+
+    public TestService(KafkaTemplate<String, DtoTestEvent> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
+    }
 
     public void testMessage(String message) {
 

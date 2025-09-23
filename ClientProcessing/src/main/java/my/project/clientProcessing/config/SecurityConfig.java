@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/client/**",
                                          "/api/v1/product/**",
-                                         "/api/v1/test/**"
+                                         "/api/v1/test/**",
+                                         "/api/v1/client-product"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

@@ -2,6 +2,7 @@ package my.project.accountProcessing.entity.account;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.StatusEnum;
 
 import java.math.BigDecimal;
 
@@ -42,6 +43,6 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountStatus status;
+    private StatusEnum status;
 
 }
