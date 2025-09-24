@@ -1,14 +1,14 @@
 package my.lib.core;
 
-public class ClientProductEvent {
+public class ClientProductAccountEvent {
 
     private Long clientId;
     private Long productId;
     private StatusEnum status;
 
-    public ClientProductEvent() {}
+    public ClientProductAccountEvent() {}
 
-    public ClientProductEvent(Long clientId, Long productId, StatusEnum status) {
+    public ClientProductAccountEvent(Long clientId, Long productId, StatusEnum status) {
         this.clientId = clientId;
         this.productId = productId;
     }

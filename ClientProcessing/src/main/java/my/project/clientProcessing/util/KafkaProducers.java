@@ -1,8 +1,9 @@
 package my.project.clientProcessing.util;
 
 import lombok.AllArgsConstructor;
-import my.lib.core.ClientProductEvent;
-import my.lib.core.DtoTestEvent;
+import my.lib.core.CardCreateEvent;
+import my.lib.core.ClientProductAccountEvent;
+import my.lib.core.ClientProductCreditEvent;
 import my.project.clientProcessing.entity.product.ProductKey;
 import my.project.clientProcessing.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,30 @@ public class KafkaProducers {
     @Autowired
     Environment environment;
 
-    private KafkaTemplate<String, ClientProductEvent> clientProductKafkaTemplate;
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-    public void KafkaSendClientProduct(ProductKey productKey, ClientProductEvent clientProductEvent) {
+    public void kafkaSendClientProductAccount(ProductKey productKey, ClientProductAccountEvent clientProductAccountEvent) {
         switch (productKey) {
             case DC, CC, NS, PENS:
-                clientProductKafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-products")), clientProductEvent.getClientId().toString(), clientProductEvent);
-                break;
-            case IPO, PC, AC:
-                clientProductKafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client_credit_products")), clientProductEvent.getClientId().toString(), clientProductEvent);
+                kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-products")), clientProductAccountEvent.getClientId().toString(), clientProductAccountEvent);
                 break;
             default:
-                throw new NotFoundException("Указанный ключ продукта не может быть обработан. Ключ: " + productKey);
+                throw new NotFoundException("Указанный ключ продукта не подходит к данной категории. Ключ: " + productKey);
         }
+    }
+
+    public void kafkaSendClientProductCredit(ProductKey productKey, ClientProductCreditEvent clientProductCreditEvent) {
+        switch (productKey) {
+            case IPO, PC, AC:
+                kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-credit-products")), clientProductCreditEvent.getClientId().toString(), clientProductCreditEvent);
+                break;
+            default:
+                throw new NotFoundException("Указанный ключ продукта не подходит к данной категории. Ключ: " + productKey);
+        }
+    }
+
+    public void kafkaSendCard(CardCreateEvent cardCreateEvent) {
+        kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-cards")), cardCreateEvent.getAccountId().toString(), cardCreateEvent);
     }
 
 }

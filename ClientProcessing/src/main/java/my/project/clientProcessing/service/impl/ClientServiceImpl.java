@@ -3,12 +3,14 @@ package my.project.clientProcessing.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import my.project.clientProcessing.dto.ClientCreateDto;
+import my.project.clientProcessing.dto.ClientResponseDto;
 import my.project.clientProcessing.dto.DocumentCheckBlacklistDto;
 import my.project.clientProcessing.dto.UserResponseDto;
 import my.project.clientProcessing.entity.client.Client;
 import my.project.clientProcessing.entity.user.User;
 import my.project.clientProcessing.exception.AlreadyExistException;
 import my.project.clientProcessing.exception.DocumentIsBannedException;
+import my.project.clientProcessing.exception.NotFoundException;
 import my.project.clientProcessing.mapper.ClientMapper;
 import my.project.clientProcessing.mapper.UserMapper;
 import my.project.clientProcessing.repository.ClientRepository;
@@ -54,6 +56,16 @@ public class ClientServiceImpl implements ClientService {
     public Client getClientByDocumentId(String documentId) {
         return clientRepository.findByDocumentId(documentId)
                 .orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ClientResponseDto getClientById(Long id) {
+        Client client = clientRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Пользователь с указанным Id не найден")
+        );
+
+        return clientMapper.toDto(client);
     }
 
 }

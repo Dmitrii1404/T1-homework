@@ -1,10 +1,11 @@
 package my.project.clientProcessing.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import my.lib.core.ClientProductCreditEvent;
 import my.lib.core.StatusEnum;
-import my.project.clientProcessing.dto.ClientProductCreateDto;
+import my.project.clientProcessing.dto.ClientProductAccountCreateDto;
+import my.project.clientProcessing.dto.ClientProductCreditCreateDto;
 import my.project.clientProcessing.dto.ClientProductResponseDto;
-import my.project.clientProcessing.dto.ClientProductUpdateDto;
 import my.project.clientProcessing.entity.client.Client;
 import my.project.clientProcessing.entity.clientProduct.ClientProduct;
 import my.project.clientProcessing.entity.product.Product;
@@ -47,22 +48,21 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Transactional
-    public ClientProductResponseDto createClientProduct(ClientProductCreateDto clientProductCreateDto) {
-        Client client = clientRepository.findById(clientProductCreateDto.clientId()).orElseThrow(
-                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientProductCreateDto.clientId())
+    public ClientProductResponseDto createClientProductAccount(ClientProductAccountCreateDto clientProductAccountCreateDto) {
+        Client client = clientRepository.findById(clientProductAccountCreateDto.clientId()).orElseThrow(
+                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientProductAccountCreateDto.clientId())
         );
 
-        Product product = productRepository.findById(clientProductCreateDto.productId()).orElseThrow(
-                () -> new NotFoundException("Не найден продукт с указанным ID: " + clientProductCreateDto.productId())
+        Product product = productRepository.findById(clientProductAccountCreateDto.productId()).orElseThrow(
+                () -> new NotFoundException("Не найден продукт с указанным ID: " + clientProductAccountCreateDto.productId())
         );
-
 
         ClientProduct clientProduct = new ClientProduct();
         clientProduct.setClient(client);
         clientProduct.setProduct(product);
         clientProduct.setStatus(StatusEnum.ACTIVE);
 
-        kafkaProducers.KafkaSendClientProduct(product.getKey(), clientProductMapper.toEventDto(clientProduct));
+        kafkaProducers.kafkaSendClientProductAccount(product.getKey(), clientProductMapper.toAccountEventDto(clientProduct));
 
         ClientProduct savedClientProduct = clientProductRepository.save(clientProduct);
 
@@ -71,30 +71,25 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Transactional
-    public ClientProductResponseDto updateClientProduct(Long id, ClientProductUpdateDto clientProductUpdateDto) {
-        ClientProduct clientProduct = clientProductRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Не найден клиентский продукт с указанным ID: " + id)
+    public ClientProductResponseDto createClientProductCredit(ClientProductCreditCreateDto clientProductCreditCreateDto) {
+        Client client = clientRepository.findById(clientProductCreditCreateDto.clientId()).orElseThrow(
+                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientProductCreditCreateDto.clientId())
         );
 
-        clientProductMapper.updateFromDto(clientProductUpdateDto, clientProduct);
-
-        kafkaProducers.KafkaSendClientProduct(clientProduct.getProduct().getKey(), clientProductMapper.toEventDto(clientProduct));
-
-        clientProductRepository.save(clientProduct);
-
-        return clientProductMapper.toDto(clientProduct);
-    }
-
-    @Override
-    @Transactional
-    public void deleteClientProduct(Long id) {
-        ClientProduct clientProduct = clientProductRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Не найден клиентский продукт с указанным ID: " + id)
+        Product product = productRepository.findById(clientProductCreditCreateDto.productId()).orElseThrow(
+                () -> new NotFoundException("Не найден продукт с указанным ID: " + clientProductCreditCreateDto.productId())
         );
 
-        clientProduct.setStatus(StatusEnum.CLOSED);
-        kafkaProducers.KafkaSendClientProduct(clientProduct.getProduct().getKey(), clientProductMapper.toEventDto(clientProduct));
+        ClientProduct clientProduct = new ClientProduct();
+        clientProduct.setClient(client);
+        clientProduct.setProduct(product);
+        clientProduct.setStatus(StatusEnum.ACTIVE);
 
-        clientProductRepository.deleteById(id);
+
+        kafkaProducers.kafkaSendClientProductCredit(product.getKey(), clientProductMapper.toCreditEventDto(clientProductCreditCreateDto));
+
+        ClientProduct savedClientProduct = clientProductRepository.save(clientProduct);
+
+        return clientProductMapper.toDto(savedClientProduct);
     }
 }

@@ -3,13 +3,11 @@ package my.project.clientProcessing.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import my.project.clientProcessing.dto.ClientCreateDto;
+import my.project.clientProcessing.dto.ClientResponseDto;
 import my.project.clientProcessing.dto.UserResponseDto;
 import my.project.clientProcessing.service.ClientService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +20,10 @@ public class ClientController {
     public ResponseEntity<UserResponseDto> register(@Valid @RequestBody ClientCreateDto clientCreateDto) {
 
         return ResponseEntity.ok(clientService.clientRegistry(clientCreateDto));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClientResponseDto> getClientById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(clientService.getClientById(id));
     }
 }

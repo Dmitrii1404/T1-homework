@@ -1,6 +1,5 @@
 package my.project.clientProcessing.config;
 
-import my.lib.core.ClientProductEvent;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,12 @@ public class KafkaConfig {
     @Value("${spring.kafka.topics.client-products}")
     private String topicClientProducts;
 
+    @Value("${spring.kafka.topics.client-cards}")
+    private String topicCard;
+
+    @Value("${spring.kafka.topics.client-credit-products}")
+    private String topicClientCreditProducts;
+
     public Map<String, Object> producerConfig() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, environment.getProperty("spring.kafka.producer.bootstrap-servers"));
@@ -39,18 +44,34 @@ public class KafkaConfig {
     }
 
     @Bean
-    ProducerFactory<String, ClientProductEvent> producerFactory() {
+    ProducerFactory<String, Object> producerFactory() {
         return new DefaultKafkaProducerFactory<>(producerConfig());
     }
 
     @Bean
-    KafkaTemplate<String, ClientProductEvent> kafkaTemplate() {
-        return new KafkaTemplate<String, ClientProductEvent>(producerFactory());
+    KafkaTemplate<String, Object> kafkaTemplate() {
+        return new KafkaTemplate<String, Object>(producerFactory());
     }
 
     @Bean
     NewTopic createClientProductTopic() {
         return TopicBuilder.name(topicClientProducts)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    NewTopic createCardTopic() {
+        return TopicBuilder.name(topicCard)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    NewTopic createClientCreditProductsTopic() {
+        return TopicBuilder.name(topicClientCreditProducts)
                 .partitions(3)
                 .replicas(1)
                 .build();

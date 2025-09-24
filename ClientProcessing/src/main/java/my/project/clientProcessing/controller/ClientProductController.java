@@ -2,9 +2,9 @@ package my.project.clientProcessing.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import my.project.clientProcessing.dto.ClientProductCreateDto;
+import my.project.clientProcessing.dto.ClientProductAccountCreateDto;
+import my.project.clientProcessing.dto.ClientProductCreditCreateDto;
 import my.project.clientProcessing.dto.ClientProductResponseDto;
-import my.project.clientProcessing.dto.ClientProductUpdateDto;
 import my.project.clientProcessing.service.ClientProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,22 +28,14 @@ public class ClientProductController {
         return ResponseEntity.ok(clientProductService.getClientProductById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<ClientProductResponseDto> createClientProduct(@Valid @RequestBody ClientProductCreateDto clientProductCreateDto) {
-        return ResponseEntity.ok(clientProductService.createClientProduct(clientProductCreateDto));
+    @PostMapping("/account")
+    public ResponseEntity<ClientProductResponseDto> createClientProduct(@Valid @RequestBody ClientProductAccountCreateDto clientProductAccountCreateDto) {
+        return ResponseEntity.ok(clientProductService.createClientProductAccount(clientProductAccountCreateDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ClientProductResponseDto> updateClientProduct(@PathVariable Long id,
-            @Valid @RequestBody ClientProductUpdateDto clientProductUpdateDto) {
-        return ResponseEntity.ok(clientProductService.updateClientProduct(id, clientProductUpdateDto));
+    @PostMapping("/credit")
+    public ResponseEntity<ClientProductResponseDto> createClientProduct(@Valid @RequestBody ClientProductCreditCreateDto clientProductCreditCreateDto) {
+        return ResponseEntity.ok(clientProductService.createClientProductCredit(clientProductCreditCreateDto));
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ClientProductResponseDto> deleteClientProduct(@PathVariable Long id) {
-        clientProductService.deleteClientProduct(id);
-        return ResponseEntity.ok().build();
-    }
-
 
 }
