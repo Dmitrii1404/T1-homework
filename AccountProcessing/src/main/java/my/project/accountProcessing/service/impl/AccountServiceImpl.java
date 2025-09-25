@@ -28,7 +28,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void updateAccount(AccountUpdateDto accountUpdateDto) {
-        // ToDo обработать ошибку
         Account account = accountRepository.findById(accountUpdateDto.getAccountId()).orElseThrow(
                 () -> new NotFountException("Аккаунт с указанным Id не найден")
         );

@@ -1,9 +1,9 @@
 server:
-  port: 8082
+  port: 8083
 
 properties:
   url:
-    client-processing: "http://localhost:8080/api/v1/client/"
+    client-processing: "http://localhost:8081/api/v1/client/"
 
   credit-limit: 10000000
   interest-rate: 0.20

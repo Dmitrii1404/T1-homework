@@ -12,6 +12,7 @@
     <module>AccountProcessing</module>
     <module>ClientProcessing</module>
     <module>CreditProcessing</module>
+    <module>core</module>
   </modules>
 
   <properties>
@@ -27,6 +28,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>my.lib</groupId>
+        <artifactId>core</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
