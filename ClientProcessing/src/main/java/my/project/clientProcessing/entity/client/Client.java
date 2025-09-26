@@ -14,7 +14,8 @@ import java.time.LocalDate;
 @Builder
 @Table(name = "clients",
     indexes = {
-            @Index(name = "uk_client_clientid", columnList = "client_id")
+            @Index(name = "uk_client_clientid", columnList = "client_id"),
+            @Index(name = "uk_client_documentid", columnList = "document_id")
     })
 public class Client {
 
@@ -42,10 +43,10 @@ public class Client {
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "document_type")
+    @Column(name = "document_type", nullable = false)
     private DocumentType documentType;
 
-    @Column(name = "document_id", unique = true)
+    @Column(name = "document_id", nullable = false, unique = true)
     private String documentId;
 
     @Column(name = "document_prefix")

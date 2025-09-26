@@ -2,8 +2,10 @@ package my.project.accountProcessing.entity.account;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.StatusEnum;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Setter
@@ -42,6 +44,22 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private AccountStatus status;
+    private StatusEnum status;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.balance == null) {
+            this.balance = BigDecimal.ZERO;
+        }
+        if (this.interestRate == null) {
+            this.interestRate = BigDecimal.ZERO;
+        }
+        if (this.isRecalc == null) {
+            this.isRecalc = true;
+        }
+        if (this.cardExist == null) {
+            this.cardExist = false;
+        }
+    }
 
 }

@@ -2,6 +2,8 @@ package my.project.accountProcessing.entity.card;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.PaymentSystem;
+import my.lib.core.StatusEnum;
 import my.project.accountProcessing.entity.account.Account;
 
 @Entity
@@ -20,7 +22,7 @@ public class Card {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
@@ -33,6 +35,6 @@ public class Card {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CardStatus status;
+    private StatusEnum status;
 
 }
