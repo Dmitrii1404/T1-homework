@@ -40,6 +40,7 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
     private final ProductRegistryRepository productRegistryRepository;
     private final PaymentRegistryService paymentRegistryService;
 
+    // открытие кредита
     @Override
     @Transactional
     public void createCredit(CreditCreateDto creditCreateDto) {

@@ -13,5 +13,6 @@ public interface ClientProductService {
     ClientProductResponseDto createClientProductAccount(ClientProductAccountCreateDto clientProductAccountCreateDto);
     ClientProductResponseDto createClientProductCredit(ClientProductCreditCreateDto clientProductCreditCreateDto);
 
+    // ToDo нужно доделать CRUD - но надо еще продумать логику для него на других сервисах
 
 }

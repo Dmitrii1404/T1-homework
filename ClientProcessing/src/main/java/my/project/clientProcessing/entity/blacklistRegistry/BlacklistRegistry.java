@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import my.lib.core.StatusEnum;
 import my.project.clientProcessing.entity.client.DocumentType;
 
 import java.time.LocalDate;
@@ -38,5 +39,15 @@ public class BlacklistRegistry {
 
     @Column(name = "blacklist_expiration_date")
     private LocalDate blacklistExpirationDate;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.blacklistedAt == null) {
+            this.blacklistedAt = LocalDate.now();
+        }
+        if (this.blacklistExpirationDate == null) {
+            this.blacklistExpirationDate = LocalDate.now().plusYears(1);
+        }
+    }
 
 }

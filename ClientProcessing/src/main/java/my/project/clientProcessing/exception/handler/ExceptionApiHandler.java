@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class ExceptionApiHandler {
 
+    // документ находится в черном списке
     @ExceptionHandler(DocumentIsBannedException.class)
     public ResponseEntity<ErrorMessageDto> handleDocumentIsBannedException(DocumentIsBannedException ex) {
         return ResponseEntity
@@ -28,6 +29,7 @@ public class ExceptionApiHandler {
                 .body(new ErrorMessageDto(ex.getMessage()));
     }
 
+    // нарушение уникальности данных (уже существует клиент с таким email и тд)
     @ExceptionHandler(AlreadyExistException.class)
     public ResponseEntity<ErrorMessageDto> handleAlreadyExistException(AlreadyExistException ex) {
         return ResponseEntity
@@ -35,20 +37,22 @@ public class ExceptionApiHandler {
                 .body(new ErrorMessageDto(ex.getMessage()));
     }
 
+    // запрашиваемые данные не найдены
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorMessageDto> handleAlreadyExistException(NotFoundException ex) {
+    public ResponseEntity<ErrorMessageDto> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity
                 .status(ex.getStatus())
                 .body(new ErrorMessageDto(ex.getMessage()));
     }
 
+    // ошибка валиадции запроса
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationException(MethodArgumentNotValidException ex) {
 
         Map<String, String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .filter(fe -> fe.getDefaultMessage() != null) // исключаем null
+                .filter(fe -> fe.getDefaultMessage() != null)
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         DefaultMessageSourceResolvable::getDefaultMessage
@@ -59,6 +63,7 @@ public class ExceptionApiHandler {
                 .body(errors);
     }
 
+    // ошибка валидации enum в запросе
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleInvalidEnum(HttpMessageNotReadableException ex) {
 
@@ -82,6 +87,5 @@ public class ExceptionApiHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
 
 }

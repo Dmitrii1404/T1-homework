@@ -1,7 +1,6 @@
 package my.project.clientProcessing.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import my.lib.core.ClientProductCreditEvent;
 import my.lib.core.StatusEnum;
 import my.project.clientProcessing.dto.ClientProductAccountCreateDto;
 import my.project.clientProcessing.dto.ClientProductCreditCreateDto;
@@ -31,6 +30,7 @@ public class ClientProductServiceImpl implements ClientProductService {
     private final ClientRepository clientRepository;
     private final KafkaProducers kafkaProducers;
 
+    // получение клиентского продукта по id
     @Override
     @Transactional(readOnly = true)
     public ClientProductResponseDto getClientProductById(Long id) {
@@ -39,6 +39,7 @@ public class ClientProductServiceImpl implements ClientProductService {
         ));
     }
 
+    // получение всех продуктов у каждого клиента
     @Override
     @Transactional(readOnly = true)
     public Page<ClientProductResponseDto> getAllClientProducts(Pageable pageable) {
@@ -46,50 +47,69 @@ public class ClientProductServiceImpl implements ClientProductService {
         return clientProducts.map(clientProductMapper::toDto);
     }
 
+    // создание клиентского продукта, обслуживание DC, CC, NS, PENS
     @Override
     @Transactional
     public ClientProductResponseDto createClientProductAccount(ClientProductAccountCreateDto clientProductAccountCreateDto) {
-        Client client = clientRepository.findById(clientProductAccountCreateDto.clientId()).orElseThrow(
-                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientProductAccountCreateDto.clientId())
+
+        // создаем сам клиентский продукт
+        ClientProduct clientProduct = createClientProduct(
+                clientProductAccountCreateDto.clientId(),
+                clientProductAccountCreateDto.productId(),
+                StatusEnum.ACTIVE
         );
 
-        Product product = productRepository.findById(clientProductAccountCreateDto.productId()).orElseThrow(
-                () -> new NotFoundException("Не найден продукт с указанным ID: " + clientProductAccountCreateDto.productId())
+        // отправляем сообщение о создании в kafka (account)
+        kafkaProducers.kafkaSendClientProductAccount(
+                clientProduct.getProduct().getKey(),
+                clientProductMapper.toAccountEventDto(clientProduct)
         );
 
-        ClientProduct clientProduct = new ClientProduct();
-        clientProduct.setClient(client);
-        clientProduct.setProduct(product);
-        clientProduct.setStatus(StatusEnum.ACTIVE);
-
-        kafkaProducers.kafkaSendClientProductAccount(product.getKey(), clientProductMapper.toAccountEventDto(clientProduct));
-
+        // сохраняем клиентский продукт
         ClientProduct savedClientProduct = clientProductRepository.save(clientProduct);
 
         return clientProductMapper.toDto(savedClientProduct);
     }
 
+    // создание клиентского продукта, обслуживание IPO, PC, AC
     @Override
     @Transactional
     public ClientProductResponseDto createClientProductCredit(ClientProductCreditCreateDto clientProductCreditCreateDto) {
-        Client client = clientRepository.findById(clientProductCreditCreateDto.clientId()).orElseThrow(
-                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientProductCreditCreateDto.clientId())
+
+        // создаем сам клиентский продукт
+        ClientProduct clientProduct = createClientProduct(
+                clientProductCreditCreateDto.clientId(),
+                clientProductCreditCreateDto.productId(),
+                StatusEnum.ACTIVE
         );
 
-        Product product = productRepository.findById(clientProductCreditCreateDto.productId()).orElseThrow(
-                () -> new NotFoundException("Не найден продукт с указанным ID: " + clientProductCreditCreateDto.productId())
+        // отправляем сообщение о создании в kafka (credit)
+        kafkaProducers.kafkaSendClientProductCredit(
+                clientProduct.getProduct().getKey(),
+                clientProductMapper.toCreditEventDto(clientProductCreditCreateDto)
+        );
+
+        // сохраняем клиентский продукт
+        ClientProduct savedClientProduct = clientProductRepository.save(clientProduct);
+
+        return clientProductMapper.toDto(savedClientProduct);
+    }
+
+    // создание самого клиентского продукта
+    private ClientProduct createClientProduct(Long clientId, Long productId, StatusEnum statusEnum) {
+        Client client = clientRepository.findById(clientId).orElseThrow(
+                () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientId)
+        );
+
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new NotFoundException("Не найден продукт с указанным ID: " + productId)
         );
 
         ClientProduct clientProduct = new ClientProduct();
         clientProduct.setClient(client);
         clientProduct.setProduct(product);
-        clientProduct.setStatus(StatusEnum.ACTIVE);
+        clientProduct.setStatus(statusEnum);
 
-
-        kafkaProducers.kafkaSendClientProductCredit(product.getKey(), clientProductMapper.toCreditEventDto(clientProductCreditCreateDto));
-
-        ClientProduct savedClientProduct = clientProductRepository.save(clientProduct);
-
-        return clientProductMapper.toDto(savedClientProduct);
+        return clientProduct;
     }
 }

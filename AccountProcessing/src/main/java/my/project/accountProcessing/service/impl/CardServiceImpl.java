@@ -26,27 +26,33 @@ public class CardServiceImpl implements CardService {
     private final AccountService accountService;
     private final CardMapper cardMapper;
 
+    // создание карты для account
     @Override
     @Transactional
     public void createCard(CardCreateDto cardCreateDto) {
+
+        // поиск account, для которого создать карту
         Account account = accountRepository.findById(cardCreateDto.accountId()).orElseThrow(
                 () -> new NotFountException("Аккаунт с указанным Id не найден")
         );
 
+        // проверка статуса аккаунта
         if (account.getStatus() != StatusEnum.ACTIVE) {
             throw new SourceNotActiveException("Аккаунт с указанным Id заблокирован");
         }
 
+        // может быть только одна карта у аккаунта
         if (account.getCardExist()) {
             throw new AlreadyExistException("Карта для данного аккаунта уже существует");
         }
 
-
+        // создание карты
         Card card = cardMapper.toEntity(cardCreateDto);
         card.setAccount(account);
         card.setStatus(StatusEnum.ACTIVE);
         card.setCardId(String.format("%08d", account.getId()));
 
+        // обновление аккаунта - CardExist = true
         AccountUpdateDto accountUpdateDto = AccountUpdateDto.builder()
                 .accountId(account.getId())
                 .cardExist(true)

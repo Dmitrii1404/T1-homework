@@ -53,4 +53,4 @@ public record ClientCreateDto(
         @Size(min = 8, message = "Пароль должен содержать минимум 8 символов")
         String password
 
-){}
+) {}

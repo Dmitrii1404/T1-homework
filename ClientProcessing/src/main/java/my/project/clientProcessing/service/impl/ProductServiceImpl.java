@@ -22,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
+    // получение всех продуктов
     @Override
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> findAllProducts(Pageable pageable) {
@@ -29,6 +30,7 @@ public class ProductServiceImpl implements ProductService {
         return products.map(productMapper::toDto);
     }
 
+    // получение продуктов с указанным ключом
     @Override
     @Transactional(readOnly = true)
     public Page<ProductResponseDto> findAllProductsByKey(Pageable pageable, ProductKey productKey) {
@@ -36,6 +38,7 @@ public class ProductServiceImpl implements ProductService {
         return products.map(productMapper::toDto);
     }
 
+    // получение продукта по id
     @Override
     @Transactional(readOnly = true)
     public ProductResponseDto findProductById(Long id) {
@@ -44,6 +47,7 @@ public class ProductServiceImpl implements ProductService {
         ));
     }
 
+    // создание продукта
     @Override
     @Transactional
     public ProductResponseDto createProduct(ProductCreateDto productCreateDto) {
@@ -51,6 +55,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(product);
     }
 
+    // обновление продукта
     @Override
     @Transactional
     public ProductResponseDto updateProduct(Long id, ProductUpdateDto productUpdateDto) {
@@ -63,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toDto(product);
     }
 
+    // удаление продукта
     @Override
     @Transactional
     public void deleteProduct(Long id) {

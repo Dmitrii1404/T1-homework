@@ -21,21 +21,23 @@ public class PaymentRegistryServiceImpl implements PaymentRegistryService {
     
     private final PaymentRegistryRepository paymentRegistryRepository;
 
-
+    // создаем и сохраняем график платежей
     @Override
     @Transactional
     public void createPayments(ProductRegistry productRegistry, CreditCreateDto creditCreateDto) {
+        // создание
         List<PaymentRegistry> payments = generatePaymentPlan(
                 productRegistry,
                 creditCreateDto.creditAmount(),
                 creditCreateDto.monthCount()
         );
 
+        // сохранение
         payments.forEach(p -> p.setProductRegistry(productRegistry));
         paymentRegistryRepository.saveAll(payments);
     }
     
-
+    // По формулам считаем пллатежи
     private List<PaymentRegistry> generatePaymentPlan(
             ProductRegistry productRegistry,
             BigDecimal principal,

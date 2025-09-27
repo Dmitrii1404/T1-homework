@@ -15,13 +15,23 @@ public class CardController {
 
     private final CardService cardService;
 
+    // POST запрос api/v1/cards/{accountId}
+    // создает карту для указанного аккаунта
+    /* тело запроса:
+    *   {
+    *       "paymentSystem": "VISA | MASTERCARD | MIR"
+    *   }
+    * возвращает:
+    *   status: 201
+    *   тело: none
+    * */
     @PostMapping("/{accountId}")
     public ResponseEntity<Void> createCard(
             @PathVariable("accountId") Long accountId,
             @Valid @RequestBody CardCreateDto cardCreateDto
     ) {
         cardService.createCard(accountId, cardCreateDto);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(201).build();
     }
 
 }

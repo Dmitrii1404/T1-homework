@@ -4,11 +4,13 @@ import my.lib.core.StatusEnum;
 
 import java.time.LocalDate;
 
-public record ClientProductResponseDto (
+public record ClientProductResponseDto(
+
         Long id,
         Long clientId,
         Long productId,
         LocalDate openDate,
         LocalDate closeDate,
         StatusEnum status
+
 ) {}

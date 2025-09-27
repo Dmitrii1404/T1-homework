@@ -15,6 +15,7 @@ public class KafkaConsumers {
     private final ProductRegistryMapper productRegistryMapper;
     private final ProductRegistryService productRegistryService;
 
+    // принимаем запросы на открытие кредита
     @KafkaListener(topics = "client_credit_products")
     public void handle(ClientProductCreditEvent clientProductCreditEvent) {
         CreditCreateDto creditCreateDto = productRegistryMapper.toDtoFromEvent(clientProductCreditEvent);

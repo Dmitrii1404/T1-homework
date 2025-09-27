@@ -13,6 +13,7 @@ public class BlacklistServiceImpl implements BlacklistService {
 
     private final BlacklistRepository blacklistRepository;
 
+    // Проверка - есть ли документ в черном списке
     @Override
     @Transactional(readOnly = true)
     public Boolean documentIsBanned(DocumentCheckBlacklistDto checkBlacklistDto) {

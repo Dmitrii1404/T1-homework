@@ -22,8 +22,12 @@ public class KafkaConsumers {
     private final CardService cardService;
     private final CardMapper cardMapper;
 
+    // принимаем запросы на создание/обновление account
     @KafkaListener(topics = "client_products")
     public void handle(ClientProductAccountEvent clientProductAccountEvent) {
+
+        // общих полей у двух сервисов не так уж и много - clientId, productId и status
+        // буду считать, что если статус = active - то это запрос на создание аккаунта
         if (clientProductAccountEvent.getStatus() == StatusEnum.ACTIVE) {
             AccountCreateDto accountCreateDto = accountMapper.toDtoFromEvent(clientProductAccountEvent);
             accountService.createAccount(accountCreateDto);
@@ -31,12 +35,14 @@ public class KafkaConsumers {
         // ToDo обновление аккаунта (пока нет в задании)
     }
 
+    // запросы на создание карты
     @KafkaListener(topics = "client_cards")
     public void handle(CardCreateEvent cardCreateEvent) {
         CardCreateDto cardCreateDto = cardMapper.toDtoFromEvent(cardCreateEvent);
         cardService.createCard(cardCreateDto);
     }
 
+    // запросы по транзакциям
     @KafkaListener(topics = "client_transactions")
     public void handle() {
         // ToDo топик client_transactions

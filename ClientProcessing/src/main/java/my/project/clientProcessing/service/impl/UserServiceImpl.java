@@ -19,24 +19,21 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    // создание User
     @Override
     @Transactional
     public User createUser(ClientCreateDto clientCreateDto) {
-        if (getUserByEmail(clientCreateDto.email()) != null) {
+
+        // проверка на существование User с таким email
+        if (userRepository.existsByEmail(clientCreateDto.email())) {
             throw new AlreadyExistException("Пользователь с такием email уже существует");
         }
 
+        // создание User + хеширование пароля
         User user = userMapper.toEntity(clientCreateDto);
         user.setPassword(passwordEncoder.encode(clientCreateDto.password()));
 
         return userRepository.save(user);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElse(null);
     }
 
 }

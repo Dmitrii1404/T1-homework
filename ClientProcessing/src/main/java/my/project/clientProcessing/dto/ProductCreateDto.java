@@ -11,4 +11,5 @@ public record ProductCreateDto(
 
         @NotNull(message = "Тип продукта обязателен")
         ProductKey key
+
 ) {}

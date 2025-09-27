@@ -4,10 +4,10 @@ import jakarta.validation.constraints.NotNull;
 
 public record ClientProductAccountCreateDto(
 
-        @NotNull
+        @NotNull(message = "Id клиента обязательно")
         Long clientId,
 
-        @NotNull
+        @NotNull(message = "Id продукта обязательно")
         Long productId
 
 ) {}

@@ -33,7 +33,7 @@ public class Payment {
     @Column(name = "is_credit", nullable = false)
     private Boolean isCredit;
 
-    @Column(name = "payed_at", nullable = false)
+    @Column(name = "payed_at")
     private LocalDate payedAt;
 
     @Enumerated(EnumType.STRING)

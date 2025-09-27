@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS payments (
     payment_date DATE NOT NULL,
     amount NUMERIC(18, 2) NOT NULL,
     is_credit BOOL NOT NULL,
-    payed_at DATE NOT NULL,
+    payed_at DATE,
     type VARCHAR(20) NOT NULL,
     CONSTRAINT fk_payments_account FOREIGN KEY (account_id) REFERENCES accounts(id)
 );

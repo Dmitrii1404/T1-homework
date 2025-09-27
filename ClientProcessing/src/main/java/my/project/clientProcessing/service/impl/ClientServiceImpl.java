@@ -30,19 +30,25 @@ public class ClientServiceImpl implements ClientService {
     private final UserMapper userMapper;
     private final UserService userService;
 
+    // регистрация клиента - создание Client+User
     @Override
     @Transactional
     public UserResponseDto clientRegistry(ClientCreateDto clientCreateDto) {
+
+        // проверка на черные списки
         if (blacklistService.documentIsBanned(new DocumentCheckBlacklistDto(clientCreateDto.documentId()))) {
             throw new DocumentIsBannedException("Указанный документ находится в черном списке");
         }
 
+        // проверка на существование уже клиента с таким паспортом
         if (getClientByDocumentId(clientCreateDto.documentId()) != null) {
             throw new AlreadyExistException("Клиент с указанным документом уже существует");
         }
 
+        // создание User
         User user = userService.createUser(clientCreateDto);
 
+        // создание Client
         Client client = clientMapper.toEntity(clientCreateDto);
         client.setUser(user);
         client.setClientId(clientCreateDto.region() + clientCreateDto.bank() + String.format("%08d", user.getId()));
@@ -51,6 +57,7 @@ public class ClientServiceImpl implements ClientService {
         return userMapper.toDto(user);
     }
 
+    // получение клиента по номеру паспорта
     @Override
     @Transactional(readOnly = true)
     public Client getClientByDocumentId(String documentId) {
@@ -58,6 +65,7 @@ public class ClientServiceImpl implements ClientService {
                 .orElse(null);
     }
 
+    // получение клиента по id
     @Override
     @Transactional(readOnly = true)
     public ClientResponseDto getClientById(Long id) {

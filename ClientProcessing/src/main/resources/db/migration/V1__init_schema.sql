@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS client_products (
 
 CREATE TABLE IF NOT EXISTS blacklist_registries (
     id BIGSERIAL PRIMARY KEY,
-    document_type VARCHAR(20),
+    document_type VARCHAR(20) NOT NULL,
     document_id VARCHAR(100) NOT NULL UNIQUE,
     black_listed_at DATE NOT NULL,
     reason VARCHAR(255),
