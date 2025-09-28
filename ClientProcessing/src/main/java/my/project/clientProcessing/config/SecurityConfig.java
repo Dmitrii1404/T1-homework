@@ -32,7 +32,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/clients/**",
                                          "/api/v1/products/**",
                                          "/api/v1/client-products/**",
-                                         "/api/v1/cards/**"
+                                         "/api/v1/cards/**",
+                                         "/api/v1/transactions/**",
+                                         "/api/v1/payments/**"
                         ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

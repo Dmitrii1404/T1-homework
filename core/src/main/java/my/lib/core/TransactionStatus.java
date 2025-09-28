@@ -1,4 +1,4 @@
-package my.project.accountProcessing.entity.transaction;
+package my.lib.core;
 
 public enum TransactionStatus {
 

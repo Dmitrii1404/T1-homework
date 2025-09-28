@@ -44,7 +44,7 @@ public class ProductRegistryServiceImpl implements ProductRegistryService {
     @Override
     @Transactional
     public void createCredit(CreditCreateDto creditCreateDto) {
-        // ToDo(на будущее) что-то делать с полученным пр=аспортом и ФИО
+        // ToDo(на будущее) что-то делать с полученным паспортом и ФИО
         ClientResponseDto client = fetchClient(creditCreateDto.clientId());
 
         ClientPaymentCheckDto clientPaymentCheckDto = getInfoClientCredits(creditCreateDto.clientId());

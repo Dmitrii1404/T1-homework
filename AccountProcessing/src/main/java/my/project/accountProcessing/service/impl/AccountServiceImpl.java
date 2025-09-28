@@ -8,8 +8,11 @@ import my.project.accountProcessing.exception.NonRetryable.NotFountException;
 import my.project.accountProcessing.mapper.AccountMapper;
 import my.project.accountProcessing.repository.AccountRepository;
 import my.project.accountProcessing.service.AccountService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -18,11 +21,15 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
 
+    @Value("${properties.interest-rate}")
+    private BigDecimal interestRate;
+
     // создание account
     @Override
     @Transactional
     public void createAccount(AccountCreateDto accountCreateDto) {
         Account account = accountMapper.toEntity(accountCreateDto);
+        account.setInterestRate(interestRate);
         accountRepository.save(account);
     }
 

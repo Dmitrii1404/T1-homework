@@ -2,6 +2,7 @@ package my.project.accountProcessing.entity.payment;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.TransactionType;
 import my.project.accountProcessing.entity.account.Account;
 
 import java.math.BigDecimal;
@@ -38,6 +39,16 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PaymentType type;
+    private TransactionType type;
+
+    @Column(nullable = false)
+    private Boolean expired;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.expired == null) {
+            this.expired = false;
+        }
+    }
 
 }

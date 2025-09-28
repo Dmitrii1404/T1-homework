@@ -1,6 +1,7 @@
 package my.project.clientProcessing.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import my.lib.core.ClientProductAccountEvent;
 import my.lib.core.StatusEnum;
 import my.project.clientProcessing.dto.ClientProductAccountCreateDto;
 import my.project.clientProcessing.dto.ClientProductCreditCreateDto;
@@ -8,6 +9,7 @@ import my.project.clientProcessing.dto.ClientProductResponseDto;
 import my.project.clientProcessing.entity.client.Client;
 import my.project.clientProcessing.entity.clientProduct.ClientProduct;
 import my.project.clientProcessing.entity.product.Product;
+import my.project.clientProcessing.entity.product.ProductKey;
 import my.project.clientProcessing.exception.NotFoundException;
 import my.project.clientProcessing.mapper.ClientProductMapper;
 import my.project.clientProcessing.repository.ClientProductRepository;
@@ -58,10 +60,15 @@ public class ClientProductServiceImpl implements ClientProductService {
                 clientProductAccountCreateDto.productId()
         );
 
+        ClientProductAccountEvent clientProductAccountEvent = clientProductMapper.toAccountEventDto(clientProduct);
+        // кредитная ли это карта
+        clientProductAccountEvent.setIsRecalc(clientProduct.getProduct().getKey() == ProductKey.CC);
+
+
         // отправляем сообщение о создании в kafka (account)
         kafkaProducers.kafkaSendClientProductAccount(
                 clientProduct.getProduct().getKey(),
-                clientProductMapper.toAccountEventDto(clientProduct)
+                clientProductAccountEvent
         );
 
         // сохраняем клиентский продукт

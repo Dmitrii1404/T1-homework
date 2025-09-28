@@ -1,9 +1,7 @@
 package my.project.clientProcessing.util;
 
 import lombok.AllArgsConstructor;
-import my.lib.core.CardCreateEvent;
-import my.lib.core.ClientProductAccountEvent;
-import my.lib.core.ClientProductCreditEvent;
+import my.lib.core.*;
 import my.project.clientProcessing.entity.product.ProductKey;
 import my.project.clientProcessing.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.UUID;
 
 
 @Component
@@ -67,6 +66,24 @@ public class KafkaProducers {
                 Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-cards")),
                 cardCreateEvent.getAccountId().toString(),
                 cardCreateEvent
+        );
+    }
+
+    // отправка сообщения в топик client_transactions
+    public void kafkaSendTransactionEvent(TransactionEvent transactionEvent) {
+        kafkaTemplate.send(
+                Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-transactions")),
+                UUID.randomUUID().toString(),
+                transactionEvent
+        );
+    }
+
+    // отправка сообщения в топик client_payments
+    public void kafkaSendPaymentEvent(PaymentEvent paymentEvent) {
+        kafkaTemplate.send(
+                Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-payments")),
+                UUID.randomUUID().toString(),
+                paymentEvent
         );
     }
 

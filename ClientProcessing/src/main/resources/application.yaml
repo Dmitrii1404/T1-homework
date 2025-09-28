@@ -41,3 +41,4 @@ spring:
       client-credit-products: client_credit_products
       client-cards: client_cards
       client-transactions: client_transactions
+      client-payments: client_payments

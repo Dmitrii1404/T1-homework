@@ -23,12 +23,14 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.topics.client-products}")
     private String topicClientProducts;
-
     @Value("${spring.kafka.topics.client-cards}")
     private String topicCard;
-
     @Value("${spring.kafka.topics.client-credit-products}")
     private String topicClientCreditProducts;
+    @Value("${spring.kafka.topics.client-transactions}")
+    private String topicClientTransactions;
+    @Value("${spring.kafka.topics.client-payments}")
+    private String topicClientPayments;
 
     public Map<String, Object> producerConfig() {
         Map<String, Object> config = new HashMap<>();
@@ -72,6 +74,22 @@ public class KafkaConfig {
     @Bean
     NewTopic createClientCreditProductsTopic() {
         return TopicBuilder.name(topicClientCreditProducts)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    NewTopic createClientTransactionsTopic() {
+        return TopicBuilder.name(topicClientTransactions)
+                .partitions(3)
+                .replicas(1)
+                .build();
+    }
+
+    @Bean
+    NewTopic createClientPaymentsTopic() {
+        return TopicBuilder.name(topicClientPayments)
                 .partitions(3)
                 .replicas(1)
                 .build();

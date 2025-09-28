@@ -3,9 +3,11 @@ package my.project.accountProcessing.entity.account;
 import jakarta.persistence.*;
 import lombok.*;
 import my.lib.core.StatusEnum;
+import my.project.accountProcessing.entity.payment.Payment;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Setter
@@ -45,6 +47,9 @@ public class Account {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusEnum status;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Payment> payments;
 
     @PrePersist
     public void prePersist() {

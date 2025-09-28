@@ -1,6 +1,13 @@
 server:
   port: 8082
 
+properties:
+  transaction:
+    limit-time-minutes: 60
+    limit-quantity-transaction: 20
+
+  interest-rate: 0.20
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/account-processing_db

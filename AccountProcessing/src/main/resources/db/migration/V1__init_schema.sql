@@ -33,8 +33,11 @@ CREATE TABLE IF NOT EXISTS payments (
     is_credit BOOL NOT NULL,
     payed_at DATE,
     type VARCHAR(20) NOT NULL,
+    expired BOOL NOT NULL DEFAULT false,
     CONSTRAINT fk_payments_account FOREIGN KEY (account_id) REFERENCES accounts(id)
 );
+
+CREATE INDEX idx_payments_account_type_payedat ON payments(account_id, type, payed_at);
 
 
 CREATE TABLE IF NOT EXISTS transactions (
@@ -44,7 +47,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     type VARCHAR(20) NOT NULL,
     amount NUMERIC(18, 2) NOT NULL,
     status VARCHAR(20) NOT NULL,
-    timestamp DATE NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
     CONSTRAINT fk_transaction_account FOREIGN KEY (account_id) REFERENCES accounts(id),
     CONSTRAINT fk_transaction_card FOREIGN KEY (card_id) REFERENCES cards(id)
     );

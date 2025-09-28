@@ -2,11 +2,14 @@ package my.project.accountProcessing.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import my.lib.core.StatusEnum;
+import my.lib.core.TransactionType;
 import my.project.accountProcessing.dto.AccountUpdateDto;
 import my.project.accountProcessing.dto.CardCreateDto;
+import my.project.accountProcessing.dto.CardProcessDto;
 import my.project.accountProcessing.entity.account.Account;
 import my.project.accountProcessing.entity.card.Card;
 import my.project.accountProcessing.exception.NonRetryable.AlreadyExistException;
+import my.project.accountProcessing.exception.NonRetryable.InsufficientFundsException;
 import my.project.accountProcessing.exception.NonRetryable.NotFountException;
 import my.project.accountProcessing.exception.NonRetryable.SourceNotActiveException;
 import my.project.accountProcessing.mapper.CardMapper;
@@ -16,6 +19,9 @@ import my.project.accountProcessing.service.AccountService;
 import my.project.accountProcessing.service.CardService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +69,14 @@ public class CardServiceImpl implements CardService {
 
         accountService.updateAccount(accountUpdateDto);
         cardRepository.save(card);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Card getCardById(Long cardId) {
+        return cardRepository.findById(cardId).orElseThrow(
+                () -> new NotFountException("Карта с указанным номером не найдена")
+        );
     }
 
 }

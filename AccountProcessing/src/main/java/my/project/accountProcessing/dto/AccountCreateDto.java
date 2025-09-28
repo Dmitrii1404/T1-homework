@@ -6,6 +6,7 @@ public record AccountCreateDto(
 
         Long clientId,
         Long productId,
-        StatusEnum status
+        StatusEnum status,
+        Boolean isRecalc
 
 ) {}
