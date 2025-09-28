@@ -24,12 +24,18 @@ public class KafkaProducers {
     private KafkaTemplate<String, Object> kafkaTemplate;
 
     // отправка сообщения в топик client_products
-    public void kafkaSendClientProductAccount(ProductKey productKey, ClientProductAccountEvent clientProductAccountEvent) {
-
+    public void kafkaSendClientProductAccount(
+            ProductKey productKey,
+            ClientProductAccountEvent clientProductAccountEvent
+    ) {
         // проверка, что ключ продукта подходит
         switch (productKey) {
             case DC, CC, NS, PENS:
-                kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-products")), clientProductAccountEvent.getClientId().toString(), clientProductAccountEvent);
+                kafkaTemplate.send(
+                        Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-products")),
+                        clientProductAccountEvent.getClientId().toString(),
+                        clientProductAccountEvent
+                );
                 break;
             default:
                 throw new NotFoundException("Указанный ключ продукта не подходит к данной категории. Ключ: " + productKey);
@@ -37,12 +43,18 @@ public class KafkaProducers {
     }
 
     // отправка сообщения в топик client_credit_products
-    public void kafkaSendClientProductCredit(ProductKey productKey, ClientProductCreditEvent clientProductCreditEvent) {
-
+    public void kafkaSendClientProductCredit(
+            ProductKey productKey,
+            ClientProductCreditEvent clientProductCreditEvent
+    ) {
         // проверка, что ключ продукта подходит
         switch (productKey) {
             case IPO, PC, AC:
-                kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-credit-products")), clientProductCreditEvent.getClientId().toString(), clientProductCreditEvent);
+                kafkaTemplate.send(
+                        Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-credit-products")),
+                        clientProductCreditEvent.getClientId().toString(),
+                        clientProductCreditEvent
+                );
                 break;
             default:
                 throw new NotFoundException("Указанный ключ продукта не подходит к данной категории. Ключ: " + productKey);
@@ -51,7 +63,11 @@ public class KafkaProducers {
 
     // отправка сообщения в топик client_cards
     public void kafkaSendCard(CardCreateEvent cardCreateEvent) {
-        kafkaTemplate.send(Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-cards")), cardCreateEvent.getAccountId().toString(), cardCreateEvent);
+        kafkaTemplate.send(
+                Objects.requireNonNull(environment.getProperty("spring.kafka.topics.client-cards")),
+                cardCreateEvent.getAccountId().toString(),
+                cardCreateEvent
+        );
     }
 
 }

@@ -37,7 +37,7 @@ public class CardServiceImpl implements CardService {
         );
 
         // проверка статуса аккаунта
-        if (account.getStatus() != StatusEnum.ACTIVE) {
+        if (account.getStatus() != StatusEnum.OPENED && account.getStatus() != StatusEnum.ACTIVE) {
             throw new SourceNotActiveException("Аккаунт с указанным Id заблокирован");
         }
 
@@ -52,10 +52,13 @@ public class CardServiceImpl implements CardService {
         card.setStatus(StatusEnum.ACTIVE);
         card.setCardId(String.format("%08d", account.getId()));
 
-        // обновление аккаунта - CardExist = true
+        // обновление аккаунта
+        // CardExist = true
+        // Status теперь будет ACTIVE (был OPENED)
         AccountUpdateDto accountUpdateDto = AccountUpdateDto.builder()
                 .accountId(account.getId())
                 .cardExist(true)
+                .status(StatusEnum.ACTIVE)
                 .build();
 
         accountService.updateAccount(accountUpdateDto);

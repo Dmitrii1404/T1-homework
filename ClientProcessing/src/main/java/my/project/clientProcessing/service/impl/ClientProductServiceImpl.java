@@ -55,8 +55,7 @@ public class ClientProductServiceImpl implements ClientProductService {
         // создаем сам клиентский продукт
         ClientProduct clientProduct = createClientProduct(
                 clientProductAccountCreateDto.clientId(),
-                clientProductAccountCreateDto.productId(),
-                StatusEnum.ACTIVE
+                clientProductAccountCreateDto.productId()
         );
 
         // отправляем сообщение о создании в kafka (account)
@@ -79,8 +78,7 @@ public class ClientProductServiceImpl implements ClientProductService {
         // создаем сам клиентский продукт
         ClientProduct clientProduct = createClientProduct(
                 clientProductCreditCreateDto.clientId(),
-                clientProductCreditCreateDto.productId(),
-                StatusEnum.ACTIVE
+                clientProductCreditCreateDto.productId()
         );
 
         // отправляем сообщение о создании в kafka (credit)
@@ -96,7 +94,7 @@ public class ClientProductServiceImpl implements ClientProductService {
     }
 
     // создание самого клиентского продукта
-    private ClientProduct createClientProduct(Long clientId, Long productId, StatusEnum statusEnum) {
+    private ClientProduct createClientProduct(Long clientId, Long productId) {
         Client client = clientRepository.findById(clientId).orElseThrow(
                 () -> new NotFoundException("Не найден пользователь с указанным ID: " + clientId)
         );
@@ -108,7 +106,7 @@ public class ClientProductServiceImpl implements ClientProductService {
         ClientProduct clientProduct = new ClientProduct();
         clientProduct.setClient(client);
         clientProduct.setProduct(product);
-        clientProduct.setStatus(statusEnum);
+        clientProduct.setStatus(StatusEnum.OPENED);
 
         return clientProduct;
     }

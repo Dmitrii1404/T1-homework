@@ -48,7 +48,7 @@ public class ClientProduct {
             this.closeDate = LocalDate.now().plusYears(1);
         }
         if (this.status == null) {
-            this.status = StatusEnum.ACTIVE;
+            this.status = StatusEnum.OPENED;
         }
     }
 }

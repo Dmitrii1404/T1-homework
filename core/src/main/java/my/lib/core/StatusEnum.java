@@ -2,6 +2,6 @@ package my.lib.core;
 
 public enum StatusEnum {
 
-    ACTIVE, CLOSED, BLOCKED, ARRESTED
+    OPENED, ACTIVE, CLOSED, BLOCKED, ARRESTED
 
 }

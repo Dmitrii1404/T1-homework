@@ -27,8 +27,8 @@ public class KafkaConsumers {
     public void handle(ClientProductAccountEvent clientProductAccountEvent) {
 
         // общих полей у двух сервисов не так уж и много - clientId, productId и status
-        // буду считать, что если статус = active - то это запрос на создание аккаунта
-        if (clientProductAccountEvent.getStatus() == StatusEnum.ACTIVE) {
+        // буду считать, что если статус = opened - то это запрос на создание аккаунта
+        if (clientProductAccountEvent.getStatus() == StatusEnum.OPENED) {
             AccountCreateDto accountCreateDto = accountMapper.toDtoFromEvent(clientProductAccountEvent);
             accountService.createAccount(accountCreateDto);
         }
