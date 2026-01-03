@@ -11,10 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "products",
-    indexes = {
-            @Index(name = "uk_product_productid", columnList = "product_id")
-    })
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -35,4 +32,12 @@ public class Product {
     public String getProductId() {
         return key.name() + this.getId();
     }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.createDate == null) {
+            this.createDate = LocalDate.now();
+        }
+    }
+
 }

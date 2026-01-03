@@ -1,6 +1,38 @@
 version: '3.9'
 
 services:
+
+  t1_zookeeper:
+    image: confluentinc/cp-zookeeper:5.5.0
+    hostname: t1_zookeeper
+    container_name: t1_zookeeper
+    ports:
+      - "2182:2182"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_TICK_TIME: 2000
+
+  t1_kafka:
+    image: confluentinc/cp-kafka:5.5.0
+    hostname: t1_kafka
+    container_name: t1_kafka
+    depends_on:
+      - t1_zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 't1_zookeeper:2182'
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://t1_kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
   client-db:
     image: postgres:17
     container_name: client-db
@@ -21,10 +53,13 @@ services:
     container_name: client-processing
     depends_on:
       - client-db
+      - t1_kafka
     environment:
       SPRING_DATASOURCE_USERNAME: clientuser
       SPRING_DATASOURCE_PASSWORD: clientpass
       SPRING_DATASOURCE_URL: jdbc:postgresql://client-db:5432/clientdb
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "t1_kafka:9092"
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: "t1_kafka:9092"
       SERVER_PORT: 8080
     ports:
       - "8081:8080"
@@ -49,10 +84,13 @@ services:
     container_name: account-processing
     depends_on:
       - account-db
+      - t1_kafka
     environment:
       SPRING_DATASOURCE_USERNAME: accountuser
       SPRING_DATASOURCE_PASSWORD: accountpass
       SPRING_DATASOURCE_URL: jdbc:postgresql://account-db:5432/accountdb
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "t1_kafka:9092"
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: "t1_kafka:9092"
       SERVER_PORT: 8080
     ports:
       - "8082:8080"
@@ -77,10 +115,14 @@ services:
     container_name: credit-processing
     depends_on:
       - credit-db
+      - t1_kafka
     environment:
       SPRING_DATASOURCE_USERNAME: credituser
       SPRING_DATASOURCE_PASSWORD: creditpass
       SPRING_DATASOURCE_URL: jdbc:postgresql://credit-db:5432/creditdb
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: "t1_kafka:9092"
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: "t1_kafka:9092"
+      PROPERTIES_URL_CLIENT_PROCESSING: "http://client-processing:8080/api/v1/clients/"
       SERVER_PORT: 8080
     ports:
       - "8083:8080"

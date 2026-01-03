@@ -2,11 +2,14 @@ package my.project.accountProcessing.entity.transaction;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.TransactionStatus;
+import my.lib.core.TransactionType;
 import my.project.accountProcessing.entity.account.Account;
 import my.project.accountProcessing.entity.card.Card;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Setter
@@ -41,6 +44,6 @@ public class Transaction {
     private TransactionStatus status;
 
     @Column(nullable = false)
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
 
 }

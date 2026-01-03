@@ -13,7 +13,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "payment_registries")
+@Table(name = "payment_registries",
+    indexes = {
+            @Index(name = "idx_payment_registries_product_registry_id", columnList = "product_registry_id"),
+            @Index(name = "idx_payment_registries_payment_expiration_date", columnList = "payment_expiration_date"),
+            @Index(name = "idx_payment_registries_expired", columnList = "expired")
+    })
 public class PaymentRegistry {
 
     @Id
@@ -30,7 +35,7 @@ public class PaymentRegistry {
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal amount;
 
-    @Column(name = "interest_rate_amount", nullable = false, precision = 5, scale = 4)
+    @Column(name = "interest_rate_amount", nullable = false, precision = 18, scale = 2)
     private BigDecimal interestRateAmount;
 
     @Column(name = "debt_amount", nullable = false, precision = 18, scale = 2)

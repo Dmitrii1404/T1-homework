@@ -1,5 +1,12 @@
 server:
-  port: 8080
+  port: 8083
+
+properties:
+  url:
+    client-processing: "http://localhost:8081/api/v1/clients/"
+
+  credit-limit: 10000000
+  interest-rate: 0.20
 
 spring:
   datasource:
@@ -20,3 +27,13 @@ spring:
     show-sql: true
     properties:
       format_sql: true
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: client-credit-products-event
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "my.lib.core"

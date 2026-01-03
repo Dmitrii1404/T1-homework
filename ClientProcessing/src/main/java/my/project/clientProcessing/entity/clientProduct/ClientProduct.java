@@ -2,6 +2,7 @@ package my.project.clientProcessing.entity.clientProduct;
 
 import jakarta.persistence.*;
 import lombok.*;
+import my.lib.core.StatusEnum;
 import my.project.clientProcessing.entity.client.Client;
 import my.project.clientProcessing.entity.product.Product;
 
@@ -36,5 +37,18 @@ public class ClientProduct {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ClientProductStatus status;
+    private StatusEnum status;
+
+    @PrePersist
+    public void prePersist() {
+        if (this.openDate == null) {
+            this.openDate = LocalDate.now();
+        }
+        if (this.closeDate == null) {
+            this.closeDate = LocalDate.now().plusYears(1);
+        }
+        if (this.status == null) {
+            this.status = StatusEnum.OPENED;
+        }
+    }
 }
